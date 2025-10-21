@@ -9,8 +9,18 @@ class Lokasi extends Model
 {
     protected $fillable = ['nama_lokasi'];
     
-    public function barang() : HasMany
+    public function barang(): HasMany
     {
         return $this->hasMany(Barang::class, 'lokasi_id');
+    }
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class, 'lokasi_id');
+    }
+
+    public function petugas()
+    {
+        return $this->users()->role('petugas');
     }
 }

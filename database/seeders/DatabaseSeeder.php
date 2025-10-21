@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         // ADMIN
         // =====================================================
         $admin = User::factory()->create([
-            'name' => 'Administrator',
+            'name' => 'Admin PPLG',
             'email' => 'admin@email.com',
             'password' => bcrypt('password'),
         ]);
@@ -31,32 +31,32 @@ class DatabaseSeeder extends Seeder
         // =====================================================
         // PETUGAS BERDASARKAN LOKASI
         // =====================================================
-        $lokasiGudang = Lokasi::where('nama_lokasi', 'Gudang Arsip')->first();
-        $lokasiLobi   = Lokasi::where('nama_lokasi', 'Lobi Depan')->first();
-        $lokasiKepala = Lokasi::where('nama_lokasi', 'Ruang Kepala Dinas')->first();
-        $lokasiRapat  = Lokasi::where('nama_lokasi', 'Ruang Rapat Utama')->first();
+        $lokasiUks = Lokasi::where('nama_lokasi', 'Ruang UKS')->first();
+        $lokasiPPLG1   = Lokasi::where('nama_lokasi', 'LAB PPLG-1')->first();
+        $lokasiPPLG2 = Lokasi::where('nama_lokasi', 'LAB PPLG-2')->first();
+        $lokasiPPLG3  = Lokasi::where('nama_lokasi', 'LAB PPLG-3')->first();
 
         // Daftar petugas sesuai lokasi
         $petugasList = [
             [
-                'name'  => 'Petugas Inventaris',
-                'email' => 'petugas1g@email.com',
-                'lokasi' => $lokasiGudang,
+                'name'  => 'Yeni Rahmawati',
+                'email' => 'petugas1@email.com',
+                'lokasi' => $lokasiUks,
             ],
             [
-                'name'  => 'Petugas Inventaris',
+                'name'  => 'Ade Roni',
                 'email' => 'petugas2@email.com',
-                'lokasi' => $lokasiLobi,
+                'lokasi' => $lokasiPPLG1,
             ],
             [
-                'name'  => 'Petugas Inventaris',
+                'name'  => 'Patah Yasin',
                 'email' => 'petugas3@email.com',
-                'lokasi' => $lokasiKepala,
+                'lokasi' => $lokasiPPLG2,
             ],
             [
-                'name'  => 'Petugas Inventaris',
+                'name'  => 'Iip Abdur Rohim',
                 'email' => 'petugas4@email.com',
-                'lokasi' => $lokasiRapat,
+                'lokasi' => $lokasiPPLG3,
             ],
         ];
 

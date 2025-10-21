@@ -33,43 +33,46 @@ class BarangController extends Controller implements HasMiddleware
     }
 
     public function index(Request $request)
-    {
-        $search = $request->search;
+{
+    $search = $request->search;
 
-        // Query untuk mengambil hanya parent barang
-        $query = Barang::with(['kategori', 'lokasi'])
-            ->where(function ($q) {
-                // Mode masal
-                $q->where('mode_input', 'masal')
-                    // Atau mode unit yang merupakan parent (kode_dasar = kode_barang atau masih null)
-                    ->orWhere(function ($subQ) {
-                        $subQ->where('mode_input', 'unit')
-                            ->where(function ($nested) {
-                                $nested->whereColumn('kode_barang', 'kode_dasar')
-                                    ->orWhereNull('kode_dasar');
-                            });
-                    });
-            });
+    // Query untuk mengambil hanya parent barang
+    $query = Barang::with(['kategori', 'lokasi'])
+        ->where(function ($q) {
+            $q->where('mode_input', 'masal')
+                ->orWhere(function ($subQ) {
+                    $subQ->where('mode_input', 'unit')
+                        ->where(function ($nested) {
+                            $nested->whereColumn('kode_barang', 'kode_dasar')
+                                ->orWhereNull('kode_dasar');
+                        });
+                });
+        });
 
-        // Tambahkan child units untuk barang mode unit
-        $query->with(['childUnits' => function ($q) {
-            $q->with(['kategori', 'lokasi']);
-        }]);
+    // Tambahkan child units untuk barang mode unit
+    $query->with(['childUnits' => function ($q) {
+        $q->with(['kategori', 'lokasi']);
+    }]);
 
-        // Jika ada pencarian
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('kode_barang', 'like', "%{$search}%")
-                    ->orWhere('nama_barang', 'like', "%{$search}%");
-            });
-        }
-
-        $barangs = $query->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        return view('barang.index', compact('barangs'));
+    // 🔍 Jika ada pencarian
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('kode_barang', 'like', "%{$search}%")
+                ->orWhere('nama_barang', 'like', "%{$search}%");
+        });
     }
+
+    // 🧩 Tambahkan filter lokasi di sini
+    $query = $this->applyLokasiFilter($query);
+
+    // Ambil data barang
+    $barangs = $query->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('barang.index', compact('barangs'));
+}
+
 
 
     public function create()

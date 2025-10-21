@@ -16,6 +16,7 @@ class LokasiController extends Controller implements HasMiddleware
             new Middleware('permission:manage lokasi', except: ['index', 'show']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -23,7 +24,10 @@ class LokasiController extends Controller implements HasMiddleware
     {
         $search = $request->search ?? null;
 
-        $lokasis = Lokasi::withSum('barang', 'jumlah') // 'jumlah' = nama kolom stok
+        $lokasis = Lokasi::with(['barang', 'users' => function($query) {
+                $query->role('petugas');
+            }])
+            ->withCount('barang')
             ->when($search, function ($query, $search) {
                 $query->where('nama_lokasi', 'like', '%' . $search . '%');
             })
@@ -31,10 +35,8 @@ class LokasiController extends Controller implements HasMiddleware
             ->paginate()
             ->withQueryString();
 
-
         return view('lokasi.index', compact('lokasis'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -42,7 +44,6 @@ class LokasiController extends Controller implements HasMiddleware
     public function create()
     {
         $lokasi = new Lokasi();
-
         return view('lokasi.create', compact('lokasi'));
     }
 
@@ -97,7 +98,6 @@ class LokasiController extends Controller implements HasMiddleware
      */
     public function destroy(Lokasi $lokasi)
     {
-        // Pastikan ada relasi barang() di model Lokasi
         if ($lokasi->barang()->exists()) {
             return redirect()->route('lokasi.index')
                 ->with('error', 'Lokasi tidak dapat dihapus karena masih memiliki barang terkait.');

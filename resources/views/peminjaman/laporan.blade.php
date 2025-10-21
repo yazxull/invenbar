@@ -98,8 +98,7 @@
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 8px;
-            font-weight: bold;
-            color: white;
+            color: #000;
         }
 
         .status-dipinjam { 
@@ -111,10 +110,6 @@
             background-color: #dc3545; 
         }
         
-        .status-dikembalikan { 
-            background-color: #28a745; 
-        }
-
         .footer {
             margin-top: 30px;
             font-size: 10px;

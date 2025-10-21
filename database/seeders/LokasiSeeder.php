@@ -15,22 +15,22 @@ class LokasiSeeder extends Seeder
     {
         DB::table('lokasis')->insert([
             [
-                'nama_lokasi' => 'Ruang Rapat Utama',
+                'nama_lokasi' => 'Ruang UKS',
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
             [
-                'nama_lokasi' => 'Lobi Depan',
+                'nama_lokasi' => 'LAB PPLG-1',
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
             [
-                'nama_lokasi' => 'Gudang Arsip',
+                'nama_lokasi' => 'LAB PPLG-2',
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
             [
-                'nama_lokasi' => 'Ruang Kepala Dinas',
+                'nama_lokasi' => 'LAB PPLG-3',
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],

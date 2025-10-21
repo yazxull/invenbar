@@ -23,7 +23,10 @@ class DashboardController extends Controller
         $lokasiId = $user->lokasi_id ?? null;
 
         // Hitung jumlah data utama
-        $jumlahBarang    = $isAdmin ? Barang::count() : Barang::where('lokasi_id', $lokasiId)->count();
+        $jumlahBarang = $isAdmin
+            ? Barang::sum('jumlah')
+            : Barang::where('lokasi_id', $lokasiId)->sum('jumlah');
+
         $jumlahKategori  = Kategori::count(); // kategori bisa dilihat semua
         $jumlahLokasi    = Lokasi::count();
         $jumlahUser      = User::count();

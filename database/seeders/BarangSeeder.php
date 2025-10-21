@@ -77,8 +77,8 @@ class BarangSeeder extends Seeder
         DB::table('barangs')->insert([
             'kode_barang' => 'LP001',
             'kode_dasar' => null,
-            'nama_barang' => 'Laptop Dell Latitude 5420',
-            'kategori_id' => 1,
+            'nama_barang' => 'Kertas HVS',
+            'kategori_id' => 3,
             'lokasi_id' => 4,
             'jumlah_baik' => 5,
             'jumlah_rusak_ringan' => 0,

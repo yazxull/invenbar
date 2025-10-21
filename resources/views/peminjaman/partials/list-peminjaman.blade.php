@@ -5,6 +5,7 @@
             <th width="12%">No. Peminjaman</th>
             <th width="18%">Peminjam<br><small class="text-muted">Email & Telepon</small></th>
             <th width="20%">Barang<br><small class="text-muted">Kode & Kategori</small></th>
+            <th width="10%">Gambar</th>
             <th width="8%">Jumlah</th>
             <th width="10%">Tgl. Pinjam</th>
             <th width="10%">Tgl. Kembali</th>
@@ -20,7 +21,7 @@
 
     @foreach ($grouped as $lokasi => $items)
     <tr class="table-light">
-        <td colspan="9">
+        <td colspan="10">
             <button class="btn btn-sm btn-outline-primary"
                 data-bs-toggle="collapse"
                 data-bs-target="#lokasi{{ Str::slug($lokasi) }}">
@@ -54,6 +55,18 @@
                 </small>
                 @else
                 <em class="text-muted">Barang tidak ditemukan</em>
+                @endif
+            </td>
+
+            <!-- Kolom Gambar Barang -->
+            <td class="text-center align-middle">
+                @if ($peminjaman->barang && $peminjaman->barang->gambar)
+                <img src="{{ asset('gambar-barang/' . $peminjaman->barang->gambar) }}"
+                    alt="Gambar Barang"
+                    class="img-thumbnail"
+                    style="width: 70px; height: 70px; object-fit: cover;">
+                @else
+                <span class="text-muted">Tidak ada</span>
                 @endif
             </td>
 

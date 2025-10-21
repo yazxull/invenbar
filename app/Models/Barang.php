@@ -100,15 +100,24 @@ class Barang extends Model
     // ==========================
     public function getKondisiSummaryAttribute()
     {
-        // ambil semua anak
+        // Jika mode masal, hitung berdasarkan kolom jumlah_baik/dll
+        if ($this->mode_input === 'masal') {
+            return [
+                'Baik' => $this->jumlah_baik ?? 0,
+                'Rusak Ringan' => $this->jumlah_rusak_ringan ?? 0,
+                'Rusak Berat' => $this->jumlah_rusak_berat ?? 0,
+            ];
+        }
+
+        // Jika mode unit, gabungkan parent dan anak berdasarkan kondisi_dominan
         $childUnits = $this->childUnits;
 
-        // gabungkan parent dan anak
         $allUnits = collect([$this])->merge($childUnits);
 
-        // hitung jumlah berdasarkan kondisi
-        return $allUnits->groupBy('kondisi')->map->count();
+        // Gunakan kondisi_dominan agar semua unit punya nilai
+        return $allUnits->groupBy('kondisi_dominan')->map->count();
     }
+
 
     // ==========================
     // KONDISI UNTUK BADGE
