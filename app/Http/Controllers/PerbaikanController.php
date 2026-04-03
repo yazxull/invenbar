@@ -22,30 +22,32 @@ class PerbaikanController extends Controller implements HasMiddleware
     }
 
     public function index(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        $statusOptions = ['Menunggu', 'Sedang Diperbaiki', 'Selesai'];
-        $tingkatOptions = ['Ringan', 'Sedang', 'Berat'];
+    $statusOptions = ['Menunggu', 'Sedang Diperbaiki', 'Selesai'];
+    $tingkatOptions = ['Ringan', 'Sedang', 'Berat'];
 
-        $query = Perbaikan::with(['barang.kategori', 'barang.lokasi', 'peminjaman'])
-            ->orderBy('created_at', 'desc');
+    $query = Perbaikan::with(['barang.kategori', 'barang.lokasi', 'peminjaman'])
+        ->orderBy('created_at', 'desc');
 
-        if ($user->hasRole('Teknisi')) {
-            $query->whereHas('barang.lokasi', function ($q) use ($user) {
-                $q->where('id', $user->lokasi_id);
-            });
-        }
-
-        $perbaikans = $query->get();
-
-        // === GROUPING PER LOKASI ===
-        $groupedPerbaikans = $perbaikans->groupBy(function ($item) {
-            return optional($item->barang->lokasi)->nama_lokasi ?? 'Lokasi Tidak Diketahui';
+    // 🔹 Jika bukan admin, tampilkan hanya data dari lokasi user
+    if (!$user->hasRole('Admin') && $user->lokasi_id) {
+        $query->whereHas('barang.lokasi', function ($q) use ($user) {
+            $q->where('id', $user->lokasi_id);
         });
-
-        return view('perbaikan.index', compact('groupedPerbaikans', 'statusOptions', 'tingkatOptions'));
     }
+
+    $perbaikans = $query->get();
+
+    // === GROUPING PER LOKASI ===
+    $groupedPerbaikans = $perbaikans->groupBy(function ($item) {
+        return optional($item->barang->lokasi)->nama_lokasi ?? 'Lokasi Tidak Diketahui';
+    });
+
+    return view('perbaikan.index', compact('groupedPerbaikans', 'statusOptions', 'tingkatOptions'));
+}
+
 
 
     public function create()
